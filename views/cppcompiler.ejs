@@ -19,10 +19,10 @@
 
 <script>
     function getOutput() {
-        let code = document.querySelector('#codearea').textContent
         const xhttp = new XMLHttpRequest()
-
+        
         xhttp.open('POST', '/cppcompiler/')
+        xhttp.setRequestHeader('Content-Type', 'text/plain')
 
         xhttp.onload = () => {
             if (xhttp.status >= 200 && xhttp.status < 400) {
@@ -34,11 +34,13 @@
                 console.error('Request failed with status: ', xhttp.status)
             }
         }
-
+        
         xhttp.onerror = () => {
             console.error('Request failed')
         }
-
-        xhttp.send()
+        
+        let code = document.getElementById('codearea').value
+        console.log(code)
+        xhttp.send(code)
     }
 </script>
