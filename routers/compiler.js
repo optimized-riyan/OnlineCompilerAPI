@@ -2,16 +2,13 @@ const { exec } = require('child_process')
 const { stderr, stdout } = require('process')
 const fs = require('fs')
 
+const timeoutCheck = Symbol('timeoutCheck')
 class Compiler {
-    constructor(lang, runCommand) {
-        this.ref = this
-        this.lang = lang
-        this.runCommand = runCommand
-    }
 
-    constructor(lang, runCommand, compileCommand) {
-        this(lang, runCommand)
+    constructor(compileCommand, runCommand) {
+        this.ref = this
         this.compileCommand = compileCommand
+        this.runCommand = runCommand
     }
 
     [timeoutCheck](process, promise) {
@@ -35,11 +32,11 @@ class Compiler {
         })
     }
 
-    run() {
+    execute() {
         throw new Error('Not defined')
     }
 
-    directOutput() {
+    directRun() {
         new Promise((resolve, reject) => {
             
             const process = exec(ref.runCommand, (error, stdout, stderr) => {
@@ -63,26 +60,26 @@ class Compiler {
 
     compileAndRun() {
         new Promise((resolve, reject) => {
-            const process = exec(ref.compileCommand, (error, stdout, stderr) => {
+            const process = exec(this.ref.compileCommand, (error, stdout, stderr) => {
                 if (error)
                     reject(error)
                 else
                     resolve({ stdout, stderr })
             })
             
-            ref.timeoutCheck(process, this)
+            this.ref.timeoutCheck(process, this)
 
         }).then(resolution => {
             if (!stderr) {
                 new Promise((resolve, reject) => {
-                    const process = exec(ref.runCommand, (error, stdout, stderr) => {
+                    const process = exec(this.ref.runCommand, (error, stdout, stderr) => {
                         if (error)
                             reject(error)
                         else
                             resolve({ stdout, stderr })
                     })
 
-                    ref.timeoutCheck(process, this)
+                    this.ref.timeoutCheck(process, this)
 
                 }).then(resolution => {
                     if (resolution.stdout)

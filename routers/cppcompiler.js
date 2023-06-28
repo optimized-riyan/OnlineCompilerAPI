@@ -5,20 +5,20 @@ const bodyParser = require('body-parser')
 const Compiler = require('./compiler')
 
 
-RUN_COMMAND = './files/cpp_file'
 COMPILE_COMMAND = 'g++ -o ./files/cpp_file.cpp ./files/cpp_file'
+RUN_COMMAND = './files/cpp_file'
 FILEPATH = './files/cpp_file.cpp'
 
 class CPPCompiler extends Compiler {
     constructor() {
-        super('cpp', RUN_COMMAND, COMPILE_COMMAND)
+        super('cpp', COMPILE_COMMAND, RUN_COMMAND)
     }
 
-    run() {
+    execute() {
         return this.compileAndRun()
     }
 }
-cppcompiler = new CPPCompiler()
+let cppcompiler = new CPPCompiler()
 
 
 router.get('/', (req, res) => {
@@ -29,7 +29,10 @@ router.use(bodyParser.text())
 
 router.post('/', (req, res) => {
     code = req.body
-    
+    cppcompiler.storeCode(FILEPATH, code)
+
+    let result = cppcompiler.execute()
+    res.send(result)
 })
 
 module.exports = router
