@@ -2,7 +2,7 @@ const { exec } = require('child_process')
 const { stderr, stdout } = require('process')
 const fs = require('fs')
 
-const timeoutCheck = Symbol('timeoutCheck')
+// const timeoutCheck = Symbol('timeoutCheck')
 class Compiler {
 
     constructor(compileCommand, runCommand) {
@@ -11,10 +11,10 @@ class Compiler {
         this.runCommand = runCommand
     }
 
-    [timeoutCheck](process, promise) {
+    timeoutCheck(process, reject) {
         const timeoutId = setTimeout(() => {
             process.kill()
-            promise.reject('TIME LIMIT EXCEEDED')
+            reject('TIME LIMIT EXCEEDED')
         }, 10000)
 
         process.on('exit', () => {
@@ -46,7 +46,7 @@ class Compiler {
                     resolve({ stdout, stderr })
             })
 
-            timeoutCheck(process, this)
+            timeoutCheck(process, reject)
 
         }).then(resolution => {
             if (resolution.stdout)
@@ -60,26 +60,26 @@ class Compiler {
 
     compileAndRun() {
         new Promise((resolve, reject) => {
-            const process = exec(this.ref.compileCommand, (error, stdout, stderr) => {
+            const process = exec(this.compileCommand, (error, stdout, stderr) => {
                 if (error)
                     reject(error)
                 else
                     resolve({ stdout, stderr })
             })
             
-            this.ref.timeoutCheck(process, this)
+            this.timeoutCheck(process, reject)
 
         }).then(resolution => {
             if (!stderr) {
                 new Promise((resolve, reject) => {
-                    const process = exec(this.ref.runCommand, (error, stdout, stderr) => {
+                    const process = exec(this.runCommand, (error, stdout, stderr) => {
                         if (error)
                             reject(error)
                         else
                             resolve({ stdout, stderr })
                     })
 
-                    this.ref.timeoutCheck(process, this)
+                    this.timeoutCheck(process, reject)
 
                 }).then(resolution => {
                     if (resolution.stdout)
