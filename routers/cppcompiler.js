@@ -2,11 +2,11 @@ const express = require('express')
 const router = express.Router()
 
 router.get('/', (req, res) => {
-    res.send('CPP Compiler GET endpoint\n')
+    res.render('cppcompiler')
 })
 
 router.post('/', (req, res) => {
-    res.send('CPP Compiler POST endpoint\n')
+    res.send('This is the CPP Compiler POST endpoint, your request was recieved\n')
 })
 
 module.exports = router
