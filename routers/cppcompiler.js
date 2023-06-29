@@ -1,17 +1,17 @@
 const express = require('express')
 const router = express.Router()
-const { exec } = require('child_process')
 const bodyParser = require('body-parser')
 const Compiler = require('./compiler')
 
 
-COMPILE_COMMAND = 'g++ -o ./files/cpp_file.cpp ./files/cpp_file'
-RUN_COMMAND = './files/cpp_file'
-FILEPATH = './files/cpp_file.cpp'
+let COMPILE_COMMAND = 'g++ ./files/cpp_file.cpp -o ./files/cpp_file'
+let RUN_COMMAND = './files/cpp_file'
+let FILEPATH = './files/cpp_file.cpp'
+
 
 class CPPCompiler extends Compiler {
     constructor() {
-        super('cpp', COMPILE_COMMAND, RUN_COMMAND)
+        super(COMPILE_COMMAND, RUN_COMMAND)
     }
 
     execute() {
@@ -27,12 +27,19 @@ router.get('/', (req, res) => {
 
 router.use(bodyParser.text())
 
-router.post('/', (req, res) => {
-    code = req.body
-    cppcompiler.storeCode(FILEPATH, code)
+router.post('/', async (req, res) => {
+    let code = req.body
+    try {
+        await cppcompiler.storeCode(FILEPATH, code)
 
-    let result = cppcompiler.execute()
-    res.send(result)
+        let output = await cppcompiler.execute()
+        res.send(output)
+    }
+    catch (e) {
+        // res.send(e)
+        res.send(e)
+        console.log(e)
+    }
 })
 
 module.exports = router

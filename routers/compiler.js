@@ -1,12 +1,13 @@
 const { exec } = require('child_process')
 const { stderr, stdout } = require('process')
 const fs = require('fs')
+const { resolve } = require('path')
 
-// const timeoutCheck = Symbol('timeoutCheck')
+let TIMEOUT = 4000
+
 class Compiler {
 
     constructor(compileCommand, runCommand) {
-        this.ref = this
         this.compileCommand = compileCommand
         this.runCommand = runCommand
     }
@@ -15,20 +16,21 @@ class Compiler {
         const timeoutId = setTimeout(() => {
             process.kill()
             reject('TIME LIMIT EXCEEDED')
-        }, 10000)
+        }, TIMEOUT)
 
         process.on('exit', () => {
             clearTimeout(timeoutId)
         })
     }
 
-
     storeCode(filepath, code) {
-        fs.writeFile(filepath, code, error => {
-            if (error)
-                console.error(error)
-            else
-                console.log('Text written to the file successfully')
+        return new Promise((resolve, reject) => {
+            fs.writeFile(filepath, code, error => {
+                if (error)
+                    reject(error)
+                else
+                    resolve('File written successfully')
+            })
         })
     }
 
@@ -39,7 +41,7 @@ class Compiler {
     directRun() {
         new Promise((resolve, reject) => {
             
-            const process = exec(ref.runCommand, (error, stdout, stderr) => {
+            const process = exec(this.runCommand, (error, stdout, stderr) => {
                 if (error)
                     reject(error)
                 else
@@ -48,52 +50,42 @@ class Compiler {
 
             timeoutCheck(process, reject)
 
-        }).then(resolution => {
-            if (resolution.stdout)
-                return resolution.stdout
+        })
+        .then(resolve => {
+            if (resolve.stdout)
+                return resolve.stdout
             else
-                return resolution.stderr
-        }).catch(rejection => {
+                return resolve.stderr
+        })
+        .catch(rejection => {
             return rejection
         })
     }
 
-    compileAndRun() {
-        new Promise((resolve, reject) => {
+    async compileAndRun() {
+        let compilerError = await new Promise(resolve => {
             const process = exec(this.compileCommand, (error, stdout, stderr) => {
                 if (error)
-                    reject(error)
-                else
-                    resolve({ stdout, stderr })
+                    resolve(error)
+                else {
+                    resolve()
+                }
             })
-            
-            this.timeoutCheck(process, reject)
-
-        }).then(resolution => {
-            if (!stderr) {
-                new Promise((resolve, reject) => {
-                    const process = exec(this.runCommand, (error, stdout, stderr) => {
-                        if (error)
-                            reject(error)
-                        else
-                            resolve({ stdout, stderr })
-                    })
-
-                    this.timeoutCheck(process, reject)
-
-                }).then(resolution => {
-                    if (resolution.stdout)
-                        return resolution.stdout
-                    
-                    if (resolution.stderr)
-                        return resolution.stderr
-                }).catch(rejection => {
-                    return rejection
-                })
-            }
-        }).catch(rejection => {
-            console.error(rejection)
         })
+
+        if (compilerError)
+            return new Promise(resolve => resolve(compilerError))
+        else
+            return new Promise((resolve, reject) => {
+                const process = exec(this.runCommand, (error, stdout, stderr) => {
+                    if (error)
+                        reject(error)
+                    else
+                        resolve(stdout)
+                })
+
+                this.timeoutCheck(process, reject)
+            })
     }
 }
 
