@@ -15,10 +15,6 @@ class CPPCompiler extends Compiler {
     constructor() {
         super(COMPILE_COMMAND, RUN_COMMAND)
     }
-
-    execute() {
-        return this.compileAndRun()
-    }
 }
 let cppcompiler = new CPPCompiler()
 
@@ -35,7 +31,6 @@ router.post('/', async (req, res) => {
         await cppcompiler.storeCode(FILEPATH, code)
 
         let output = await cppcompiler.execute()
-        console.log('output: ' + output)
         res.send(output)
     }
     catch (e) {

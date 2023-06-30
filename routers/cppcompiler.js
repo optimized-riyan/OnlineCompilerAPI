@@ -15,10 +15,6 @@ class CPPCompiler extends Compiler {
     constructor() {
         super(COMPILE_COMMAND, RUN_COMMAND)
     }
-
-    execute() {
-        return this.compileAndRun()
-    }
 }
 let cppcompiler = new CPPCompiler()
 
