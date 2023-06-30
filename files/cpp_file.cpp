@@ -1,8 +1,6 @@
-#include<iostream>
-using namespace std;
+#include <iostream>
 
 int main() {
- for (int i = 0; i < 10; i++)
-  cout << "Hello World!\n";
- return 0;
+    std::cout << "Hello World!";
+    return 0;
 }

@@ -11,12 +11,12 @@ let POSTURL = '/javacompiler/'
 let HEADING = 'Java Compiler'
 
 
-class CPPCompiler extends Compiler {
+class JavaCompiler extends Compiler {
     constructor() {
         super(COMPILE_COMMAND, RUN_COMMAND)
     }
 }
-let cppcompiler = new CPPCompiler()
+let javacompiler = new JavaCompiler()
 
 
 router.get('/', (req, res) => {
@@ -28,9 +28,9 @@ router.use(bodyParser.text())
 router.post('/', async (req, res) => {
     let code = req.body
     try {
-        await cppcompiler.storeCode(FILEPATH, code)
+        await javacompiler.storeCode(FILEPATH, code)
 
-        let output = await cppcompiler.execute()
+        let output = await javacompiler.execute()
         res.send(output)
     }
     catch (e) {

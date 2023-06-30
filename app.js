@@ -3,6 +3,7 @@ const app = express()
 
 const cppcompiler_route = require('./routers/cppcompiler.js')
 const javacompiler_route = require('./routers/javacompiler.js')
+const pycompiler_route = require('./routers/pycompiler.js')
 
 // constants
 VIEW_ENGINE = 'ejs'
@@ -20,6 +21,7 @@ STATIC.forEach(directory => {
 
 app.use('/cppcompiler', cppcompiler_route)
 app.use('/javacompiler', javacompiler_route)
+app.use('/pycompiler', pycompiler_route)
 
 // root route
 app.get('/', (req, res) => {

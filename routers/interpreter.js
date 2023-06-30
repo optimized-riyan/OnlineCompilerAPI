@@ -17,7 +17,7 @@ class Interpreter extends AbstractCompiler {
                     resolve(stdout)
             })
 
-            timeoutCheck(process, reject)
+            this.timeoutCheck(process, reject)
 
         })
     }
