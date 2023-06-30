@@ -22,7 +22,7 @@ let cppcompiler = new CPPCompiler()
 
 
 router.get('/', (req, res) => {
-    res.render('cppcompiler')
+    res.render('compiler', { posturl: '/cppcompiler/' })
 })
 
 router.use(bodyParser.text())

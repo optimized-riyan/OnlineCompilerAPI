@@ -21,7 +21,7 @@
     function getOutput() {
         const xhttp = new XMLHttpRequest()
         
-        xhttp.open('POST', '/cppcompiler/')
+        xhttp.open('POST', '<%= locals.posturl %>')
         xhttp.setRequestHeader('Content-Type', 'text/plain')
 
         xhttp.onload = () => {
