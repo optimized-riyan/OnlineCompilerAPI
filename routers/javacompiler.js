@@ -4,11 +4,11 @@ const bodyParser = require('body-parser')
 const Compiler = require('./compiler')
 
 
-let COMPILE_COMMAND = 'g++ ./files/cpp_file.cpp -o ./files/cpp_file'
-let RUN_COMMAND = './files/cpp_file'
-let FILEPATH = './files/cpp_file.cpp'
-let POSTURL = '/cppcompiler/'
-let HEADING = 'CPP Compiler'
+let COMPILE_COMMAND = 'javac -d ./files ./files/JavaProgram.java'
+let RUN_COMMAND = 'java -cp ./files  JavaProgram'
+let FILEPATH = './files/JavaProgram.java'
+let POSTURL = '/javacompiler/'
+let HEADING = 'Java Compiler'
 
 
 class CPPCompiler extends Compiler {
@@ -35,6 +35,7 @@ router.post('/', async (req, res) => {
         await cppcompiler.storeCode(FILEPATH, code)
 
         let output = await cppcompiler.execute()
+        console.log('output: ' + output)
         res.send(output)
     }
     catch (e) {
