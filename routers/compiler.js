@@ -66,7 +66,7 @@ class Compiler {
         let compilerError = await new Promise(resolve => {
             const process = exec(this.compileCommand, (error, stdout, stderr) => {
                 if (error)
-                    resolve(error)
+                    resolve(error.message)
                 else {
                     resolve()
                 }
@@ -79,7 +79,7 @@ class Compiler {
             return new Promise((resolve, reject) => {
                 const process = exec(this.runCommand, (error, stdout, stderr) => {
                     if (error)
-                        reject(error)
+                        reject(error.message)
                     else
                         resolve(stdout)
                 })

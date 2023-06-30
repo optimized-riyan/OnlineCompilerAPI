@@ -33,10 +33,10 @@ router.post('/', async (req, res) => {
         await cppcompiler.storeCode(FILEPATH, code)
 
         let output = await cppcompiler.execute()
+        console.log('output: ' + output)
         res.send(output)
     }
     catch (e) {
-        // res.send(e)
         res.send(e)
         console.log(e)
     }
