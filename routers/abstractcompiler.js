@@ -1,4 +1,3 @@
-const { exec } = require('child_process')
 const fs = require('fs')
 
 let TIMEOUT = 4000
@@ -28,30 +27,6 @@ class AbstractCompiler {
                 else
                     resolve('File written successfully')
             })
-        })
-    }
-
-    directRun() {
-        new Promise((resolve, reject) => {
-            
-            const process = exec(this.runCommand, (error, stdout, stderr) => {
-                if (error)
-                    reject(error)
-                else
-                    resolve({ stdout, stderr })
-            })
-
-            timeoutCheck(process, reject)
-
-        })
-        .then(resolve => {
-            if (resolve.stdout)
-                return resolve.stdout
-            else
-                return resolve.stderr
-        })
-        .catch(rejection => {
-            return rejection
         })
     }
 }
