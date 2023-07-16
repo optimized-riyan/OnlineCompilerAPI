@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+const path = require('path')
 
 const cppcompiler_route = require('./routers/cppcompiler.js')
 const javacompiler_route = require('./routers/javacompiler.js')
@@ -8,9 +9,10 @@ const jscompiler_route = require('./routers/jscompiler.js')
 const phpcompiler_route = require('./routers/phpcompiler.js')
 
 // constants
+PORT = 3000
 VIEW_ENGINE = 'ejs'
 VIEWS = './views'
-STATIC = ['public', 'images']
+STATIC = ['public', 'images', path.join(__dirname, 'build')]
 
 // setters
 app.set('view engine', VIEW_ENGINE)
@@ -29,7 +31,7 @@ app.use('/phpcompiler', phpcompiler_route)
 
 // root route
 app.get('/', (req, res) => {
-    res.send("Hello World!")
+    res.sendFile(path.join(__dirname, 'build', 'index.html'))
 })
 
-app.listen(3000, () => console.log('listening...'))
+app.listen(PORT, () => console.log(`listening on http://localhost:${PORT}/`))

@@ -4,8 +4,8 @@ const bodyParser = require('body-parser')
 const Interpreter = require('./interpreter')
 
 
-let RUN_COMMAND = 'node ./files/js_file.py'
-let FILEPATH = './files/js_file.py'
+let RUN_COMMAND = 'node ./files/js_file.js'
+let FILEPATH = './files/js_file.js'
 let POSTURL = '/jscompiler/'
 let HEADING = 'JS Interpreter'
 
@@ -30,6 +30,7 @@ router.post('/', async (req, res) => {
         await jsinterpreter.storeCode(FILEPATH, code)
 
         let output = await jsinterpreter.execute()
+        console.log(output)
         res.send(output)
     }
     catch (e) {

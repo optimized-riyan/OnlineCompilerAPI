@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const bodyParser = require('body-parser')
 const Compiler = require('./compiler')
+const path = require('path')
 
 
 let COMPILE_COMMAND = 'g++ ./files/cpp_file.cpp -o ./files/cpp_file'
@@ -21,6 +22,8 @@ let cppcompiler = new CPPCompiler()
 
 router.get('/', (req, res) => {
     res.render('compiler', { heading: HEADING, posturl: POSTURL })
+    // res.sendFile(path.join(__dirname, '..', 'build', 'index.html'))
+    // res.send(path.join(__dirname, '..'))
 })
 
 router.use(bodyParser.text())
