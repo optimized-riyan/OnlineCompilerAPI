@@ -1,5 +1,5 @@
-const { exec } = require('child_process');
-const AbstractCompiler = require('./abstractcompiler');
+const { exec } = require('child_process')
+const AbstractCompiler = require('./abstractcompiler')
 
 class Interpreter extends AbstractCompiler {
     constructor(runCommand) {

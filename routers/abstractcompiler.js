@@ -19,13 +19,19 @@ class AbstractCompiler {
         throw new Error('Not defined')
     }
 
-    storeCode(filepath, code) {
+    storeCode(filepath, code, input) {
         return new Promise((resolve, reject) => {
             fs.writeFile(filepath, code, error => {
                 if (error)
                     reject(error)
-                else
-                    resolve('File written successfully')
+                else {
+                    fs.writeFile('./files/input.txt', input, error => {
+                        if (error)
+                            reject(error)
+                        else
+                            resolve('file writing done successfully')
+                    })
+                }
             })
         })
     }
