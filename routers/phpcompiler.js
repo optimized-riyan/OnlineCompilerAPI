@@ -2,9 +2,10 @@ const express = require('express')
 const router = express.Router()
 const bodyParser = require('body-parser')
 const Interpreter = require('./interpreter')
+const { exec } = require('child_process')
 
 
-let RUN_COMMAND = 'php ./files/php_file.php'
+let RUN_COMMAND = 'php ./files/php_file.php < ./files/input.txt'
 let FILEPATH = './files/php_file.php'
 let POSTURL = '/phpcompiler/'
 let HEADING = 'PHP Interpreter'
@@ -22,12 +23,13 @@ router.get('/', (req, res) => {
     res.render('compiler', { heading: HEADING, posturl: POSTURL })
 })
 
-router.use(bodyParser.text())
+router.use(bodyParser.json())
 
 router.post('/', async (req, res) => {
-    let code = req.body
+    let code = req.body.code
+    let input = req.body.input
     try {
-        await phpinterpreter.storeCode(FILEPATH, code)
+        await phpinterpreter.storeCode(FILEPATH, code, input)
 
         let output = await phpinterpreter.execute()
         res.send(output)
