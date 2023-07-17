@@ -15,20 +15,6 @@ class PyInterpreter extends Interpreter {
     constructor() {
         super(RUN_COMMAND)
     }
-
-    execute() {
-        return new Promise((resolve, reject) => {
-            
-            const process = exec(this.runCommand, (error, stdout, stderr) => {
-                if (error)
-                    resolve(error.message)
-                else
-                    resolve(stdout)
-            })
-
-            this.timeoutCheck(process, reject)
-        })
-    }
 }
 
 let pyinterpreter = new PyInterpreter()

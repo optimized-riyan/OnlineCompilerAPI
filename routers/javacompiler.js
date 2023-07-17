@@ -5,7 +5,7 @@ const Compiler = require('./compiler')
 
 
 let COMPILE_COMMAND = 'javac -d ./files ./files/JavaProgram.java'
-let RUN_COMMAND = 'java -cp ./files  JavaProgram'
+let RUN_COMMAND = 'java -cp ./files  JavaProgram < ./files/input.txt'
 let FILEPATH = './files/JavaProgram.java'
 let POSTURL = '/javacompiler/'
 let HEADING = 'Java Compiler'
@@ -23,12 +23,13 @@ router.get('/', (req, res) => {
     res.render('compiler', { heading: HEADING, posturl: POSTURL })
 })
 
-router.use(bodyParser.text())
+router.use(bodyParser.json())
 
 router.post('/', async (req, res) => {
-    let code = req.body
+    let code = req.body.code
+    let input = req.body.input
     try {
-        await javacompiler.storeCode(FILEPATH, code)
+        await javacompiler.storeCode(FILEPATH, code, input)
 
         let output = await javacompiler.execute()
         res.send(output)

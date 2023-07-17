@@ -1,2 +1,1 @@
-name = int(input())
-print(name)
+print('Hello The Holy name')

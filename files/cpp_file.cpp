@@ -1,6 +1,9 @@
 #include <iostream>
+using namespace std;
 
 int main() {
-    std::cout << "Hello Wo!";
-    return 0;
+string name;
+cin >> name;
+ cout << "Hello " + name + "!";
+return 0;
 }

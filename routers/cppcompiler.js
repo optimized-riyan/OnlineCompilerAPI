@@ -6,7 +6,7 @@ const path = require('path')
 
 
 let COMPILE_COMMAND = 'g++ ./files/cpp_file.cpp -o ./files/cpp_file'
-let RUN_COMMAND = './files/cpp_file'
+let RUN_COMMAND = './files/cpp_file < ./files/input.txt'
 let FILEPATH = './files/cpp_file.cpp'
 let POSTURL = '/cppcompiler/'
 let HEADING = 'CPP Compiler'
@@ -22,16 +22,15 @@ let cppcompiler = new CPPCompiler()
 
 router.get('/', (req, res) => {
     res.render('compiler', { heading: HEADING, posturl: POSTURL })
-    // res.sendFile(path.join(__dirname, '..', 'build', 'index.html'))
-    // res.send(path.join(__dirname, '..'))
 })
 
-router.use(bodyParser.text())
+router.use(bodyParser.json())
 
 router.post('/', async (req, res) => {
-    let code = req.body
+    let code = req.body.code
+    let input = req.body.input
     try {
-        await cppcompiler.storeCode(FILEPATH, code)
+        await cppcompiler.storeCode(FILEPATH, code, input)
 
         let output = await cppcompiler.execute()
         res.send(output)

@@ -2,7 +2,6 @@ const express = require('express')
 const router = express.Router()
 const bodyParser = require('body-parser')
 const Interpreter = require('./interpreter')
-const { exec } = require('child_process')
 
 
 let RUN_COMMAND = 'php ./files/php_file.php < ./files/input.txt'
