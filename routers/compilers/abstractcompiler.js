@@ -1,8 +1,20 @@
 const fs = require('fs')
+const path = require('path')
 
 let TIMEOUT = 4000
+let CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789A'
+let FILES_DIRECTORY = './files'
 
 class AbstractCompiler {
+    generateRandomName(length) {
+        let result = ''
+        let randomPosition = 0
+        for (let i = 0; i < length; i++) {
+            randomPosition = Math.floor(Math.random() * CHARACTERS.length)
+            result += CHARACTERS[randomPosition]
+        }
+        return result
+    }
 
     timeoutCheck(process, reject) {
         const timeoutId = setTimeout(() => {
@@ -19,20 +31,30 @@ class AbstractCompiler {
         throw new Error('Not defined')
     }
 
-    storeCode(filepath, code, input) {
+    storeCode(extension, code, input) {
+        let codeFile = this.generateRandomName(20)  + '.' + extension
+        let inputFile = this.generateRandomName(20) + '.txt'
+
         return new Promise((resolve, reject) => {
-            fs.writeFile(filepath, code, error => {
+            fs.writeFile(path.join(FILES_DIRECTORY, codeFile), code, error => {
                 if (error)
                     reject(error)
                 else {
-                    fs.writeFile('./files/input.txt', input, error => {
+                    fs.writeFile(path.join(FILES_DIRECTORY, inputFile), input, error => {
                         if (error)
                             reject(error)
                         else
-                            resolve('file writing done successfully')
+                            resolve({ codeFile, inputFile })
                     })
                 }
             })
+        })
+    }
+
+    removeFile(filename) {
+        fs.unlink(path.join(FILES_DIRECTORY, filename), error => {
+            if (error) 
+                console.error(error)
         })
     }
 }

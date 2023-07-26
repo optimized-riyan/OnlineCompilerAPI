@@ -2,15 +2,14 @@ const { exec } = require('child_process')
 const AbstractCompiler = require('./abstractcompiler')
 
 class Interpreter extends AbstractCompiler {
-    constructor(runCommand) {
+    constructor() {
         super()
-        this.runCommand = runCommand
     }
 
-    execute() {
+    execute(runCommand) {
         return new Promise((resolve, reject) => {
             
-            const process = exec(this.runCommand, (error, stdout, stderr) => {
+            const process = exec(runCommand, (error, stdout, stderr) => {
                 if (error)
                     resolve(error.message)
                 else

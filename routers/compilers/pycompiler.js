@@ -5,15 +5,15 @@ const Interpreter = require('./interpreter')
 const { exec } = require('child_process')
 
 
-let RUN_COMMAND = 'python3 ./files/python_file.py < ./files/input.txt'
-let FILEPATH = './files/python_file.py'
+let RUN_COMMAND = (codeFile, inputFile) => {
+    return ('python3 ./files/' + codeFile + ' < ./files/' + inputFile)
+}
 let POSTURL = '/pycompiler/'
-let HEADING = 'Python Interpreter'
 
 
 class PyInterpreter extends Interpreter {
     constructor() {
-        super(RUN_COMMAND)
+        super()
     }
 }
 
@@ -21,7 +21,7 @@ let pyinterpreter = new PyInterpreter()
 
 
 router.get('/', (req, res) => {
-    res.render('compiler', { heading: HEADING, posturl: POSTURL })
+    res.render('compiler')
 })
 
 router.use(bodyParser.json())
@@ -30,10 +30,13 @@ router.post('/', async (req, res) => {
     let code = req.body.code
     let input = req.body.input
     try {
-        await pyinterpreter.storeCode(FILEPATH, code, input)
+        let files = await pyinterpreter.storeCode('py', code, input)
 
-        let output = await pyinterpreter.execute()
+        let output = await pyinterpreter.execute(RUN_COMMAND(files.codeFile, files.inputFile))
         res.send(output)
+
+        pyinterpreter.removeFile(files.codeFile)
+        pyinterpreter.removeFile(files.inputFile)
     }
     catch (e) {
         res.send(e)
