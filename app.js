@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const path = require('path')
 
+const ccompiler_route = require('./routers/compilers/ccompiler.js')
 const cppcompiler_route = require('./routers/compilers/cppcompiler.js')
 const javacompiler_route = require('./routers/compilers/javacompiler.js')
 const pycompiler_route = require('./routers/compilers/pycompiler.js')
@@ -23,6 +24,7 @@ STATIC.forEach(directory => {
     app.use(express.static(directory))
 });
 
+app.use('/ccompiler', cppcompiler_route)
 app.use('/cppcompiler', cppcompiler_route)
 app.use('/javacompiler', javacompiler_route)
 app.use('/pycompiler', pycompiler_route)

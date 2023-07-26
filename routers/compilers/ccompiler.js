@@ -6,20 +6,20 @@ const path = require('path')
 
 
 let COMPILE_COMMAND = (codeFile, exeFile) => {
-    return ('g++ ./files/' + codeFile + ' -o ./files/' + exeFile)
+    return ('gcc ./files/' + codeFile + ' -o ./files/' + exeFile)
 }
 let RUN_COMMAND = (exeFile, inputFile) => {
     return ('./files/' + exeFile + ' < ./files/' + inputFile)
 }
-let POSTURL = '/cppcompiler/'
+let POSTURL = '/ccompiler/'
 
 
-class CPPCompiler extends Compiler {
+class CCompiler extends Compiler {
     constructor() {
         super()
     }
 }
-let cppcompiler = new CPPCompiler()
+let ccompiler = new CCompiler()
 
 
 router.use(bodyParser.json())
@@ -28,15 +28,15 @@ router.post('/', async (req, res) => {
     let code = req.body.code
     let input = req.body.input
     try {
-        let files = await cppcompiler.storeCode('cpp', code, input)
-        files.exeFile = files.codeFile.slice(0, files.codeFile.length - ('.cpp'.length))
+        let files = await ccompiler.storeCode('c', code, input)
+        files.exeFile = files.codeFile.slice(0, files.codeFile.length - ('.c'.length))
 
-        let output = await cppcompiler.execute(COMPILE_COMMAND(files.codeFile, files.exeFile), RUN_COMMAND(files.exeFile, files.inputFile))
+        let output = await ccompiler.execute(COMPILE_COMMAND(files.codeFile, files.exeFile), RUN_COMMAND(files.exeFile, files.inputFile))
         res.send(output)
         
-        cppcompiler.removeFile(files.codeFile)
-        cppcompiler.removeFile(files.exeFile)
-        cppcompiler.removeFile(files.inputFile)
+        ccompiler.removeFile(files.codeFile)
+        ccompiler.removeFile(files.exeFile)
+        ccompiler.removeFile(files.inputFile)
     }
     catch (e) {
         res.send(e)

@@ -12,6 +12,8 @@ class Interpreter extends AbstractCompiler {
             const process = exec(runCommand, (error, stdout, stderr) => {
                 if (error)
                     resolve(error.message)
+                else if (stderr)
+                    reject(stderr)
                 else
                     resolve(stdout)
             })

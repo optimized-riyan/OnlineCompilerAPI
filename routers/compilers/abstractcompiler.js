@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 
-let TIMEOUT = 4000
+let TIMEOUT = 10000
 let CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789A'
 let FILES_DIRECTORY = './files'
 
