@@ -2,11 +2,11 @@ const express = require('express')
 const app = express()
 const path = require('path')
 
-const cppcompiler_route = require('./routers/cppcompiler.js')
-const javacompiler_route = require('./routers/javacompiler.js')
-const pycompiler_route = require('./routers/pycompiler.js')
-const jscompiler_route = require('./routers/jscompiler.js')
-const phpcompiler_route = require('./routers/phpcompiler.js')
+const cppcompiler_route = require('./routers/compilers/cppcompiler.js')
+const javacompiler_route = require('./routers/compilers/javacompiler.js')
+const pycompiler_route = require('./routers/compilers/pycompiler.js')
+const jscompiler_route = require('./routers/compilers/jscompiler.js')
+const phpcompiler_route = require('./routers/compilers/phpcompiler.js')
 
 // constants
 PORT = 3000
