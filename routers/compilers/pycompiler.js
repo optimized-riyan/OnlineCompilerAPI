@@ -2,7 +2,6 @@ const express = require('express')
 const router = express.Router()
 const bodyParser = require('body-parser')
 const Interpreter = require('./interpreter')
-const { exec } = require('child_process')
 
 
 let RUN_COMMAND = (codeFile, inputFile) => {
@@ -19,10 +18,6 @@ class PyInterpreter extends Interpreter {
 
 let pyinterpreter = new PyInterpreter()
 
-
-router.get('/', (req, res) => {
-    res.render('compiler')
-})
 
 router.use(bodyParser.json())
 
