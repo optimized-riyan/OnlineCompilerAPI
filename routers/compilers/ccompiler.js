@@ -11,7 +11,6 @@ let COMPILE_COMMAND = (codeFile, exeFile) => {
 let RUN_COMMAND = (exeFile, inputFile) => {
     return ('./files/' + exeFile + ' < ./files/' + inputFile)
 }
-let POSTURL = '/ccompiler/'
 
 
 class CCompiler extends Compiler {

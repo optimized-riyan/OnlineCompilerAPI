@@ -2,7 +2,6 @@ const express = require('express')
 const router = express.Router()
 const bodyParser = require('body-parser')
 const Compiler = require('./compiler')
-const path = require('path')
 
 
 let COMPILE_COMMAND = (codeFile, exeFile) => {
@@ -11,7 +10,6 @@ let COMPILE_COMMAND = (codeFile, exeFile) => {
 let RUN_COMMAND = (exeFile, inputFile) => {
     return ('./files/' + exeFile + ' < ./files/' + inputFile)
 }
-let POSTURL = '/cppcompiler/'
 
 
 class CPPCompiler extends Compiler {

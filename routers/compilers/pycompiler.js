@@ -7,7 +7,6 @@ const Interpreter = require('./interpreter')
 let RUN_COMMAND = (codeFile, inputFile) => {
     return ('python3 ./files/' + codeFile + ' < ./files/' + inputFile)
 }
-let POSTURL = '/pycompiler/'
 
 
 class PyInterpreter extends Interpreter {

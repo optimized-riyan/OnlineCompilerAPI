@@ -24,7 +24,7 @@ STATIC.forEach(directory => {
     app.use(express.static(directory))
 });
 
-app.use('/ccompiler', cppcompiler_route)
+app.use('/ccompiler', ccompiler_route)
 app.use('/cppcompiler', cppcompiler_route)
 app.use('/javacompiler', javacompiler_route)
 app.use('/pycompiler', pycompiler_route)

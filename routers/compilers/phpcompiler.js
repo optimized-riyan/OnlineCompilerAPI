@@ -7,7 +7,6 @@ const Interpreter = require('./interpreter')
 let RUN_COMMAND = (codeFile, inputFile) => {
     return ('php ./files/' + codeFile + ' < ./files/' + inputFile)
 }
-let POSTURL = '/phpcompiler/'
 
 
 class PHPInterpreter extends Interpreter {

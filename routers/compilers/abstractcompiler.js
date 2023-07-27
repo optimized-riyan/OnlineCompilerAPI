@@ -6,6 +6,7 @@ let CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789
 let FILES_DIRECTORY = './files'
 
 class AbstractCompiler {
+
     generateRandomName(length) {
         let result = ''
         let randomPosition = 0
