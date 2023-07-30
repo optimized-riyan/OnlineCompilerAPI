@@ -1,3 +1,7 @@
+// Refer to readme.txt for info on:
+// - Project Structure
+// - Hosting
+
 const express = require('express')
 const app = express()
 const path = require('path')
