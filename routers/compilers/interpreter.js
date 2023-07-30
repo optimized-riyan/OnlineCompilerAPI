@@ -8,7 +8,7 @@ class Interpreter extends AbstractCompiler {
 
     execute(runCommand) {
         return new Promise((resolve, reject) => {
-            
+            // this process id is stored to be used for the timeout check
             const process = exec(runCommand, (error, stdout, stderr) => {
                 if (error)
                     resolve(error.message)
@@ -18,8 +18,8 @@ class Interpreter extends AbstractCompiler {
                     resolve(stdout)
             })
 
+            // to avoid infinite loop
             this.timeoutCheck(process, reject)
-
         })
     }
 }

@@ -3,6 +3,8 @@ const router = express.Router()
 const bodyParser = require('body-parser')
 const Interpreter = require('./interpreter')
 
+// the logic is same as explained the cppcompiler.js file, only that a few steps are omitted since python and
+// other similar languages are loosely typed
 
 let RUN_COMMAND = (codeFile, inputFile) => {
     return ('python3 ./files/' + codeFile + ' < ./files/' + inputFile)

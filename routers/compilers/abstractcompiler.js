@@ -7,6 +7,8 @@ let FILES_DIRECTORY = './files'
 
 class AbstractCompiler {
 
+    // This function will be used to generate random names for files
+    // This is necessary to ensure multiple users can submit the programs to be run
     generateRandomName(length) {
         let result = ''
         let randomPosition = 0
@@ -17,6 +19,7 @@ class AbstractCompiler {
         return result
     }
 
+    // This timeout will be used to ensure the executing thread does not get stuck in a loop in case of a looping program
     timeoutCheck(process, reject) {
         const timeoutId = setTimeout(() => {
             process.kill()
@@ -28,10 +31,12 @@ class AbstractCompiler {
         })
     }
 
+    // Abstract function, its implementation depends on the language being strictly or loosely typed
     execute() {
         throw new Error('Not defined')
     }
 
+    // Used to store files
     storeCode(extension, code, input) {
         let codeFile = this.generateRandomName(20)  + '.' + extension
         let inputFile = this.generateRandomName(20) + '.txt'
@@ -52,6 +57,7 @@ class AbstractCompiler {
         })
     }
 
+    // Used to delete files
     removeFile(filename) {
         fs.unlink(path.join(FILES_DIRECTORY, filename), error => {
             if (error) 

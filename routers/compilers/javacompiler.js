@@ -5,15 +5,14 @@ const Compiler = require('./compiler')
 const fs = require('fs')
 const path = require('path')
 
+// the code differs from the cpp compiler in few places, these are described in the comments below
 
 let COMPILE_COMMAND = (codeFile) => {
     return ('javac -d ./files ./files/' + codeFile)
 }
-// COMPILE_COMMAND = 'javac -d ./files ./files/JavaProgram.java'
 let RUN_COMMAND = (exeFile, inputFile) => {
     return ('java -cp ./files ' + exeFile + ' < ./files/' + inputFile)
 }
-// RUN_COMMAND = 'java -cp ./files JavaProgram < ./files/input.txt'
 let CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789A'
 let FILES_DIRECTORY = './files'
 
@@ -23,10 +22,12 @@ class JavaCompiler extends Compiler {
         super()
     }
 
+    // this custom function is required for java
     storeCode(extension, code, input) {
         let codeFile = this.generateRandomName(20)  + '.' + extension
         let inputFile = this.generateRandomName(20) + '.txt'
-
+        
+        // this is a necessary step so different java files can be executed asynchronously
         code = 'public class ' + codeFile.slice(0, codeFile.length - extension.length - 1) + ' {\n' + code + '\n}'
 
         return new Promise((resolve, reject) => {
@@ -61,6 +62,7 @@ router.post('/', async (req, res) => {
         res.send(output)
 
         javacompiler.removeFile(files.codeFile)
+        // the .class exetension is the way the exe file is stored in 
         javacompiler.removeFile(files.exeFile + '.class')
         javacompiler.removeFile(files.inputFile)
     }
