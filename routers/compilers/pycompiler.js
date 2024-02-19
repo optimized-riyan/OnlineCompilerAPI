@@ -29,13 +29,12 @@ router.post("/", async (req, res) => {
         let output = await pyinterpreter.execute(
             RUN_COMMAND(files.codeFile, files.inputFile)
         );
-        res.send(output);
+        res.json({ output });
 
         pyinterpreter.removeFile(files.codeFile);
         pyinterpreter.removeFile(files.inputFile);
     } catch (e) {
-        res.send(e);
-        console.log(e);
+        res.json({ error: e });
     }
 });
 

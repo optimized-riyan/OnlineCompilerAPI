@@ -6,7 +6,6 @@
     "mongoose": "^7.4.0",
     "mysql": "^2.18.1",
     "nodemailer": "^6.9.4",
-    "nodemon": "^2.0.22",
     "sequelize": "^6.37.1",
     "uuid": "^9.0.0"
   },
@@ -29,5 +28,8 @@
   "bugs": {
     "url": "https://github.com/optimized-riyan/editor-project/issues"
   },
-  "homepage": "https://github.com/optimized-riyan/editor-project#readme"
+  "homepage": "https://github.com/optimized-riyan/editor-project#readme",
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  }
 }
