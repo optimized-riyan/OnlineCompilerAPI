@@ -4,8 +4,8 @@
 
 const express = require('express');
 const app = express();
-const path = require('path');
-const { Sequelize } = require('sequelize');
+const mysql = require('mysql2');
+require('dotenv').config();
 
 const ccompiler_route = require('./routers/compilers/ccompiler.js');
 const cppcompiler_route = require('./routers/compilers/cppcompiler.js');
@@ -14,21 +14,21 @@ const pycompiler_route = require('./routers/compilers/pycompiler.js');
 const jscompiler_route = require('./routers/compilers/jscompiler.js');
 const phpcompiler_route = require('./routers/compilers/phpcompiler.js');
 
-// constants
-PORT = 3000;
-VIEW_ENGINE = 'ejs';
-VIEWS = './views';
-STATIC = ['public', 'images', path.join(__dirname, 'build')];
-
-// setters
-app.set('view engine', VIEW_ENGINE);
-app.set('views', VIEWS);
-
-// middlewares
-STATIC.forEach((directory) => {
-    app.use(express.static(directory));
+const conn = mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+});
+conn.connect((err) => {
+    if (err) {
+        console.error(err);
+    } else {
+        console.log(`Connected to ${process.env.DB_NAME} successfully!`);
+    }
 });
 
+// routers
 app.use('/ccompiler', ccompiler_route);
 app.use('/cppcompiler', cppcompiler_route);
 app.use('/javacompiler', javacompiler_route);
@@ -36,18 +36,22 @@ app.use('/pycompiler', pycompiler_route);
 app.use('/jscompiler', jscompiler_route);
 app.use('/phpcompiler', phpcompiler_route);
 
-const db = require('./models');
-db.sequelize.sync().then((req) => {
-    app.listen(PORT, () =>
-        console.log(`listening on http://localhost:${PORT}/`)
-    );
+app.get('/', async (req, res) => {
+    try {
+        let dbQuery = async () => {
+            return new Promise((resolve, reject) => {
+                conn.query('select * from problems', (queryErr, data) => {
+                    if (queryErr) {
+                        reject(queryErr);
+                    } else resolve(data);
+                });
+            });
+        };
+
+        res.json(await dbQuery());
+    } catch (queryErr) {
+        console.error(queryErr);
+    }
 });
 
-// root route
-// app.get('/', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'build', 'index.html'));
-// });
-
-// app.get('/Codeboard', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'build', 'index.html'));
-// });
+app.listen(process.env.PORT, () => console.log(`listening on http://localhost:${process.env.PORT}/`));
