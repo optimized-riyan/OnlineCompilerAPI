@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
 const Interpreter = require('./interpreter');
-const { conn } = require('@db');
+const conn = require('../../db');
 
 // the logic is same as explained the cppcompiler.js file, only that a few steps are omitted since python and
 // other similar languages are loosely typed
