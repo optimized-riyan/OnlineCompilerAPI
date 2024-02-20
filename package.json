@@ -5,6 +5,7 @@
     "ejs": "^3.1.9",
     "express": "^4.18.2",
     "fs": "^0.0.1-security",
+    "module-alias": "^2.2.3",
     "mongoose": "^7.4.0",
     "mysql2": "^3.9.1",
     "nodemailer": "^6.9.4",
