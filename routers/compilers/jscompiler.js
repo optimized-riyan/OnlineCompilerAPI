@@ -1,41 +1,25 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const bodyParser = require("body-parser");
-const Interpreter = require("./interpreter");
+const bodyParser = require('body-parser');
+const Interpreter = require('./interpreter');
 
-let RUN_COMMAND = (codeFile, inputFile) => {
-    return "node ./files/" + codeFile + " < ./files/" + inputFile;
+let runCommand = (codeFile, inputFile) => {
+    return 'node ./files/' + codeFile + ' < ./files/' + inputFile;
 };
 
-class JSInterpreter extends Interpreter {
-    constructor() {
-        super();
-    }
-}
-let jsinterpreter = new JSInterpreter();
-
-router.get("/", (req, res) => {
-    res.render("compiler");
-});
+let interpreter = new Interpreter(runCommand, 'js');
 
 router.use(bodyParser.json());
 
-router.post("/", async (req, res) => {
-    let code = req.body.code;
-    let input = req.body.input;
+router.post('/runtrivial', async (req, res) => {
     try {
-        let files = await jsinterpreter.storeCode("js", code, input);
-
-        let output = await jsinterpreter.execute(
-            RUN_COMMAND(files.codeFile, files.inputFile)
+        outputs = await interpreter.runTrivial(
+            req.body.code,
+            req.body.testcases
         );
-        res.send(output);
-
-        jsinterpreter.removeFile(files.codeFile);
-        jsinterpreter.removeFile(files.inputFile);
-    } catch (e) {
-        res.send(e);
-        console.log(e);
+        res.json({ outputs });
+    } catch (error) {
+        res.json({ error: error.message });
     }
 });
 

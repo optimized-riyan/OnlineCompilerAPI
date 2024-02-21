@@ -25,6 +25,8 @@ class Interpreter extends AbstractCompiler {
     async runTrivial(code, testcases) {
         return new Promise(async (resolve, reject) => {
             try {
+                if (!testcases || testcases.length == 0) reject(new Error('No testcases were found'));
+
                 let codeFile = await this.storeCode(this.extension, code);
                 let outputs = [];
                 for (const testcase of testcases) {

@@ -16,7 +16,10 @@ router.use(bodyParser.json());
 
 router.post('/runtrivial', async (req, res) => {
     try {
-        outputs = await interpreter.runTrivial(req.body.code, req.body.testcases);
+        outputs = await interpreter.runTrivial(
+            req.body.code,
+            req.body.testcases
+        );
         res.json({ outputs });
     } catch (error) {
         res.json({ error: error.message });

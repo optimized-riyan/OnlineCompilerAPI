@@ -1,37 +1,25 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const bodyParser = require("body-parser");
-const Interpreter = require("./interpreter");
+const bodyParser = require('body-parser');
+const Interpreter = require('./interpreter');
 
-let RUN_COMMAND = (codeFile, inputFile) => {
-    return "php ./files/" + codeFile + " < ./files/" + inputFile;
+let runCommand = (codeFile, inputFile) => {
+    return 'php ./files/' + codeFile + ' < ./files/' + inputFile;
 };
 
-class PHPInterpreter extends Interpreter {
-    constructor() {
-        super();
-    }
-}
-let phpinterpreter = new PHPInterpreter();
+let interpreter = new Interpreter(runCommand, 'php');
 
 router.use(bodyParser.json());
 
-router.post("/", async (req, res) => {
-    let code = req.body.code;
-    let input = req.body.input;
+router.post('/runtrivial', async (req, res) => {
     try {
-        let files = await phpinterpreter.storeCode("php", code, input);
-
-        let output = await phpinterpreter.execute(
-            RUN_COMMAND(files.inputFile, files.codeFile)
+        outputs = await interpreter.runTrivial(
+            req.body.code,
+            req.body.testcases
         );
-        res.send(output);
-
-        phpinterpreter.removeFile(files.codeFile);
-        phpinterpreter.removeFile(files.inputFile);
-    } catch (e) {
-        res.send(e);
-        console.log(e);
+        res.json({ outputs });
+    } catch (error) {
+        res.json({ error: error.message });
     }
 });
 

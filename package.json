@@ -16,7 +16,7 @@
   "description": "MHTECHIN project",
   "main": "app.js",
   "scripts": {
-    "test": "nodemon app.js"
+    "dev": "nodemon --ignore './files' app.js"
   },
   "repository": {
     "type": "git",
