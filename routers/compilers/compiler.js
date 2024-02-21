@@ -32,13 +32,14 @@ class Compiler extends AbstractCompiler {
 
     async runTrivial(code, testcases) {
         return new Promise(async (resolve, reject) => {
+            let codeFile, exeFile, inputFile;
             try {
-                let codeFile = await this.storeCode(this.extension, code);
-                let exeFile = codeFile.slice(0, codeFile.length - '.c'.length);
+                codeFile = await this.storeCode(this.extension, code);
+                exeFile = codeFile.slice(0, codeFile.length - '.c'.length);
 
                 let outputs = [];
                 for (const testcase of testcases) {
-                    let inputFile = await this.storeInput(testcase);
+                    inputFile = await this.storeInput(testcase);
                     let output = await this.execute(
                         this.compileCommand(codeFile, exeFile),
                         this.runCommand(exeFile, inputFile)
@@ -52,6 +53,8 @@ class Compiler extends AbstractCompiler {
                 this.removeFile(exeFile);
             } catch (error) {
                 reject(error);
+            } finally {
+                this.removeIfExists([codeFile, exeFile, inputFile]);
             }
         });
     }

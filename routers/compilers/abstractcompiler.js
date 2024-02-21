@@ -77,6 +77,18 @@ class AbstractCompiler {
             console.error(error);
         }
     }
+
+    async removeIfExists(files) {
+        for (const file of files) {
+            fs.stat(file, (err, stat) => {
+                console.log(file);
+                if (!err)
+                    fs.unlink(path.join(FILES_DIRECTORY, file), (error) => {
+                        if (error) console.error(error);
+                    });
+            });
+        }
+    }
 }
 
 module.exports = AbstractCompiler;
