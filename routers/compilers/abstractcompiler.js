@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-let TIMEOUT = 10000;
+let TIMEOUT = 5000;
 let CHARACTERS =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789A';
 let FILES_DIRECTORY = './files';
@@ -23,7 +23,7 @@ class AbstractCompiler {
     timeoutCheck(process, reject) {
         const timeoutId = setTimeout(() => {
             process.kill();
-            reject('TIME LIMIT EXCEEDED');
+            reject(new Error('TIME LIMIT EXCEEDED'));
         }, TIMEOUT);
 
         process.on('exit', () => {
