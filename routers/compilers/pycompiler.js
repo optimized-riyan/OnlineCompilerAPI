@@ -20,7 +20,7 @@ router.post('/runtrivial', async (req, res) => {
         outputs = await interpreter.runTrivial(req.body.code, req.body.testcases);
         res.json({ outputs });
     } catch (error) {
-        res.json({ error });
+        res.json(error);
     }
 });
 

@@ -8,10 +8,10 @@ class Interpreter extends AbstractCompiler {
         this.extension = extension;
     }
 
-    execute() {
+    execute(consoleCommand) {
         return new Promise((resolve, reject) => {
             // this process id is stored to be used for the timeout check
-            const process = exec(runCommand, (error, stdout, stderr) => {
+            const process = exec(consoleCommand, (error, stdout, stderr) => {
                 if (error) resolve(error.message);
                 else if (stderr) reject(stderr);
                 else resolve(stdout);
@@ -25,7 +25,8 @@ class Interpreter extends AbstractCompiler {
     async runTrivial(code, testcases) {
         return new Promise(async (resolve, reject) => {
             try {
-                codeFile = await this.storeCode(this.extension, code);
+                let codeFile = await this.storeCode(this.extension, code);
+                console.log(this);
                 let outputs = [];
                 for (const testcase of testcases) {
                     let inputFile = await this.storeInput(testcase);
@@ -38,7 +39,7 @@ class Interpreter extends AbstractCompiler {
                 this.removeFile(codeFile);
                 resolve(outputs);
             } catch (error) {
-                reject(error);
+                reject(error.stack);
             }
         });
     }
