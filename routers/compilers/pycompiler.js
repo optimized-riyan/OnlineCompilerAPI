@@ -21,40 +21,32 @@ let pyinterpreter = new PyInterpreter();
 
 router.use(bodyParser.json());
 
-router.get('/', async (req, res) => {
+router.post('/run', async (req, res) => {
+    let codeFile;
     try {
-        let dbQuery = async () => {
-            return new Promise((resolve, reject) => {
-                conn.query('select * from problems', (queryErr, data) => {
-                    if (queryErr) {
-                        reject(queryErr);
-                    } else resolve(data);
-                });
-            });
-        };
+        let code = req.body.code;
+        let testcases = req.body.testcases;
 
-        res.json(await dbQuery());
-    } catch (queryErr) {
-        console.error(queryErr);
-        res.send('There has been an error in the query');
+        codeFile = await pyinterpreter.storeCode('py', code);
+        let outputs = [];
+        for (const testcase of testcases) {
+            let inputFile = await pyinterpreter.storeInput(testcase);
+            let output = await pyinterpreter.execute(
+                RUN_COMMAND(codeFile, inputFile)
+            );
+            outputs.push(output);
+            pyinterpreter.removeFile(inputFile);
+        }
+
+        res.json({ outputs });
+    } catch (error) {
+        res.json({ error });
     }
-});
 
-router.post('/', async (req, res) => {
-    let code = req.body.code;
-    let input = req.body.input;
     try {
-        let files = await pyinterpreter.storeCode('py', code, input);
-
-        let output = await pyinterpreter.execute(
-            RUN_COMMAND(files.codeFile, files.inputFile)
-        );
-        res.json({ output });
-
-        pyinterpreter.removeFile(files.codeFile);
-        pyinterpreter.removeFile(files.inputFile);
-    } catch (e) {
-        res.json({ error: e });
+        pyinterpreter.removeFile(codeFile);
+    } catch (error) {
+        console.log(error);
     }
 });
 

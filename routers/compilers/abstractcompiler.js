@@ -1,16 +1,16 @@
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
 let TIMEOUT = 10000;
 let CHARACTERS =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789A";
-let FILES_DIRECTORY = "./files";
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789A';
+let FILES_DIRECTORY = './files';
 
 class AbstractCompiler {
     // This function will be used to generate random names for files
     // This is necessary to ensure multiple users can submit the programs to be run
     generateRandomName(length) {
-        let result = "";
+        let result = '';
         let randomPosition = 0;
         for (let i = 0; i < length; i++) {
             randomPosition = Math.floor(Math.random() * CHARACTERS.length);
@@ -23,23 +23,22 @@ class AbstractCompiler {
     timeoutCheck(process, reject) {
         const timeoutId = setTimeout(() => {
             process.kill();
-            reject("TIME LIMIT EXCEEDED");
+            reject('TIME LIMIT EXCEEDED');
         }, TIMEOUT);
 
-        process.on("exit", () => {
+        process.on('exit', () => {
             clearTimeout(timeoutId);
         });
     }
 
     // Abstract function, its implementation depends on the language being strictly or loosely typed
     execute() {
-        throw new Error("Not defined");
+        throw new Error('Not defined');
     }
 
     // Used to store files
-    storeCode(extension, code, input) {
-        let codeFile = this.generateRandomName(20) + "." + extension;
-        let inputFile = this.generateRandomName(20) + ".txt";
+    storeCode(extension, code) {
+        let codeFile = this.generateRandomName(20) + '.' + extension;
 
         return new Promise((resolve, reject) => {
             fs.writeFile(
@@ -47,16 +46,22 @@ class AbstractCompiler {
                 code,
                 (error) => {
                     if (error) reject(error);
-                    else {
-                        fs.writeFile(
-                            path.join(FILES_DIRECTORY, inputFile),
-                            input,
-                            (error) => {
-                                if (error) reject(error);
-                                else resolve({ codeFile, inputFile });
-                            }
-                        );
-                    }
+                    else resolve(codeFile);
+                }
+            );
+        });
+    }
+
+    storeInput(input) {
+        let inputFile = this.generateRandomName(20) + '.txt';
+
+        return new Promise((resolve, reject) => {
+            fs.writeFile(
+                path.join(FILES_DIRECTORY, inputFile),
+                input,
+                (error) => {
+                    if (error) reject(error);
+                    else resolve(inputFile);
                 }
             );
         });
