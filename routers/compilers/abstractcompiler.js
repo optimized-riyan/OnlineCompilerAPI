@@ -69,9 +69,13 @@ class AbstractCompiler {
 
     // Used to delete files
     removeFile(filename) {
-        fs.unlink(path.join(FILES_DIRECTORY, filename), (error) => {
-            if (error) console.error(error);
-        });
+        try {
+            fs.unlink(path.join(FILES_DIRECTORY, filename), (error) => {
+                if (error) console.error(error);
+            });
+        } catch (error) {
+            console.error(error);
+        }
     }
 }
 
