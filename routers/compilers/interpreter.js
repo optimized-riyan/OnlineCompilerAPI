@@ -24,13 +24,14 @@ class Interpreter extends AbstractCompiler {
 
     async runTrivial(code, testcases) {
         return new Promise(async (resolve, reject) => {
+            let codeFile, inputFile;
             try {
                 if (!testcases || testcases.length == 0) reject(new Error('No testcases were found'));
 
-                let codeFile = await this.storeCode(this.extension, code);
+                codeFile = await this.storeCode(this.extension, code);
                 let outputs = [];
                 for (const testcase of testcases) {
-                    let inputFile = await this.storeInput(testcase);
+                    inputFile = await this.storeInput(testcase);
                     let output = await this.execute(
                         this.runCommand(codeFile, inputFile)
                     );
@@ -41,6 +42,8 @@ class Interpreter extends AbstractCompiler {
                 resolve(outputs);
             } catch (error) {
                 reject(error);
+            } finally {
+                this.removeIfExists([codeFile, inputFile]);
             }
         });
     }

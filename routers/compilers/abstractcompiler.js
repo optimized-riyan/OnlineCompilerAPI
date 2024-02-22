@@ -80,13 +80,10 @@ class AbstractCompiler {
 
     async removeIfExists(files) {
         for (const file of files) {
-            fs.stat(file, (err, stat) => {
-                console.log(file);
-                if (!err)
-                    fs.unlink(path.join(FILES_DIRECTORY, file), (error) => {
-                        if (error) console.error(error);
-                    });
-            });
+            if (fs.existsSync(path.join(FILES_DIRECTORY, file)))
+                fs.unlink(path.join(FILES_DIRECTORY, file), (err) => {
+                    if (err) console.error(err);
+                });
         }
     }
 }

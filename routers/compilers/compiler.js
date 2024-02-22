@@ -10,11 +10,11 @@ class Compiler extends AbstractCompiler {
     }
 
     async execute(compileCommand, runCommand) {
-        // code to compile the sent program
         return new Promise(async (resolve, reject) => {
             await new Promise((resolve) => {
-                exec(compileCommand, (error, stdout, stderr) => {
+                exec(compileCommand, (error, _stdout, stderr) => {
                     if (error) reject(error);
+                    else if (stderr) reject(stderr);
                     else resolve();
                 });
             });
@@ -35,7 +35,7 @@ class Compiler extends AbstractCompiler {
             let codeFile, exeFile, inputFile;
             try {
                 codeFile = await this.storeCode(this.extension, code);
-                exeFile = codeFile.slice(0, codeFile.length - '.c'.length);
+                exeFile = codeFile.slice(0, codeFile.length - this.extension.length - 1);
 
                 let outputs = [];
                 for (const testcase of testcases) {
@@ -48,9 +48,6 @@ class Compiler extends AbstractCompiler {
                     this.removeFile(inputFile);
                 }
                 resolve(outputs);
-
-                this.removeFile(codeFile);
-                this.removeFile(exeFile);
             } catch (error) {
                 reject(error);
             } finally {
