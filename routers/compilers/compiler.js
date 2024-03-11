@@ -34,6 +34,14 @@ class Compiler extends AbstractCompiler {
         return new Promise(async (resolve, reject) => {
             let codeFile, exeFile, inputFile;
             try {
+                if (!testcases || testcases.length == 0) {
+                    reject(new Error('No testcases were found'));
+                    return;
+                }
+                if (!code) {
+                    reject(new Error('Code is empty'));
+                }
+
                 codeFile = await this.storeCode(this.extension, code);
                 exeFile = codeFile.slice(0, codeFile.length - this.extension.length - 1);
 
@@ -51,7 +59,12 @@ class Compiler extends AbstractCompiler {
             } catch (error) {
                 reject(error);
             } finally {
-                this.removeIfExists([codeFile, exeFile, inputFile]);
+                if (codeFile)
+                    this.removeIfExists(codeFile);
+                if (exeFile)
+                    this.removeIfExists(exeFile);
+                if (inputFile)
+                    this.removeIfExists(inputFile)
             }
         });
     }

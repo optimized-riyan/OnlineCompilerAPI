@@ -78,13 +78,11 @@ class AbstractCompiler {
         }
     }
 
-    async removeIfExists(files) {
-        for (const file of files) {
-            if (fs.existsSync(path.join(FILES_DIRECTORY, file)))
-                fs.unlink(path.join(FILES_DIRECTORY, file), (err) => {
-                    if (err) console.error(err);
-                });
-        }
+    async removeIfExists(file) {
+        if (fs.existsSync(path.join(FILES_DIRECTORY, file)))
+            fs.unlink(path.join(FILES_DIRECTORY, file), (err) => {
+                if (err) console.error(err);
+            });
     }
 }
 

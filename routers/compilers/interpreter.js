@@ -26,7 +26,13 @@ class Interpreter extends AbstractCompiler {
         return new Promise(async (resolve, reject) => {
             let codeFile, inputFile;
             try {
-                if (!testcases || testcases.length == 0) reject(new Error('No testcases were found'));
+                if (!testcases || testcases.length == 0) {
+                    reject(new Error('No testcases were found'));
+                    return;
+                }
+                if (!code) {
+                    reject(new Error('Code is empty'));
+                }
 
                 codeFile = await this.storeCode(this.extension, code);
                 let outputs = [];
@@ -43,7 +49,10 @@ class Interpreter extends AbstractCompiler {
             } catch (error) {
                 reject(error);
             } finally {
-                this.removeIfExists([codeFile, inputFile]);
+                if (codeFile)
+                    this.removeIfExists(codeFile);
+                if (inputFile)
+                    this.removeIfExists(inputFile);
             }
         });
     }
