@@ -1,24 +1,16 @@
-const express = require('express');
-const router = express.Router();
-const bodyParser = require('body-parser');
+const CompilerRouter = require('../compilerRouter');
 const Interpreter = require('./interpreter');
-const cors = require('cors');
-
-const corsOptions = {
-    origin: 'http://127.0.0.1:8000'
-};
-router.use(cors(corsOptions));
 
 // the logic is same as explained the cppcompiler.js file, only that a few steps are omitted since python and
 // other similar languages are loosely typed
+
+const router = new CompilerRouter().router;
 
 let runCommand = (codeFile, inputFile) => {
     return 'python3 ./files/' + codeFile + ' < ./files/' + inputFile;
 };
 
-let interpreter = new Interpreter(runCommand, 'py');
-
-router.use(bodyParser.json());
+const interpreter = new Interpreter(runCommand, 'py');
 
 router.post('/runtrivial', async (req, res) => {
     try {
