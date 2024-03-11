@@ -1,9 +1,8 @@
-const express = require("express");
-const router = express.Router();
-const bodyParser = require("body-parser");
+const CompilerRouter = require('../compilerRouter');
 const Compiler = require("./compiler");
 const fs = require("fs");
-const path = require("path");
+
+const router = new CompilerRouter().router;
 
 // the code differs from the cpp compiler in few places, these are described in the comments below
 
@@ -13,8 +12,6 @@ let COMPILE_COMMAND = (codeFile) => {
 let RUN_COMMAND = (exeFile, inputFile) => {
     return "java -cp ./files " + exeFile + " < ./files/" + inputFile;
 };
-let CHARACTERS =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789A";
 let FILES_DIRECTORY = "./files";
 
 class JavaCompiler extends Compiler {
@@ -57,8 +54,6 @@ class JavaCompiler extends Compiler {
     }
 }
 let javacompiler = new JavaCompiler();
-
-router.use(bodyParser.json());
 
 router.post("/", async (req, res) => {
     let code = req.body.code;

@@ -1,7 +1,7 @@
-const express = require("express");
-const router = express.Router();
-const bodyParser = require("body-parser");
+const CompilerRouter = require('../compilerRouter');
 const Compiler = require("./compiler");
+
+const router = new CompilerRouter().router;
 
 // this command is going to be different for files with different names, hence its made into a function
 let COMPILE_COMMAND = (codeFile, exeFile) => {
@@ -20,9 +20,6 @@ class CPPCompiler extends Compiler {
     }
 }
 let cppcompiler = new CPPCompiler();
-
-// to parse incoming json req.body
-router.use(bodyParser.json());
 
 router.post("/", async (req, res) => {
     let code = req.body.code;

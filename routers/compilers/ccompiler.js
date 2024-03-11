@@ -1,8 +1,7 @@
-const express = require('express');
-const router = express.Router();
-const bodyParser = require('body-parser');
+const CompilerRouter = require('../compilerRouter');
 const Compiler = require('./compiler');
-const path = require('path');
+
+const router = new CompilerRouter().router;
 
 let compileCommand = (codeFile, exeFile) => {
     return 'gcc ./files/' + codeFile + ' -o ./files/' + exeFile;
@@ -12,8 +11,6 @@ let runCommand = (exeFile, inputFile) => {
 };
 
 let compiler = new Compiler(compileCommand, runCommand, 'c');
-
-router.use(bodyParser.json());
 
 router.post('/runtrivial', async (req, res) => {
     try {

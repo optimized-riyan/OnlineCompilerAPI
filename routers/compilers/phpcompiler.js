@@ -1,15 +1,13 @@
-const express = require('express');
-const router = express.Router();
-const bodyParser = require('body-parser');
+const CompilerRouter = require('../compilerRouter');
 const Interpreter = require('./interpreter');
+
+const router = new CompilerRouter().router;
 
 let runCommand = (codeFile, inputFile) => {
     return 'php ./files/' + codeFile + ' < ./files/' + inputFile;
 };
 
 let interpreter = new Interpreter(runCommand, 'php');
-
-router.use(bodyParser.json());
 
 router.post('/runtrivial', async (req, res) => {
     try {
