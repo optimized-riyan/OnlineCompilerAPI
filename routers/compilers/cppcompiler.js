@@ -21,7 +21,10 @@ router.post('/runtrivial', async (req, res) => {
         outputs = await compiler.runTrivial(req.body.code, req.body.testcases);
         res.json({ outputs });
     } catch (error) {
-        res.json({ error: error.message });
+        if (error.message)
+            res.json({ error: error.message });
+        else
+            res.json({ error });
     }
 });
 

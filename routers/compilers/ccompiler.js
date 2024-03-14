@@ -20,7 +20,10 @@ router.post('/runtrivial', async (req, res) => {
         );
         res.json({ outputs });
     } catch (error) {
-        res.json({ error: error.message });
+        if (error.message)
+            res.json({ error: error.message });
+        else
+            res.json({ error });
     }
 });
 
